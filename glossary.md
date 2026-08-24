@@ -56,6 +56,9 @@
 - **依赖（Dependency）**：项目用到的、别人写好的库。
 - **暂存区（Staging Area）**：`git add` 之后、`git commit` 之前的"候车区"，用来选择这次要存哪些改动。
 - **代理（Proxy）**：本地的"中转站"，帮你转发网络请求。访问 GitHub 这类网站时需要它。
+- **远程仓库（Remote）**：放在网上（如 GitHub）的仓库副本，和本地仓库同步。`origin` 是默认给远程仓库起的代号。
+- **换行符（LF / CRLF）**：表示"换行"的字符，Linux/Mac 用 LF、Windows 用 CRLF。Git 若自动转换会报 `LF will be replaced by CRLF` 警告，用 `core.autocrlf=false` 关掉即可。
+- **编码（Encoding）**：字符在电脑里的存储方式，常见 UTF-8（通用）和 GBK（中文老编码）。两者混用会产生"乱码"。
 
 ---
 
