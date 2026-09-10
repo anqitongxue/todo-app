@@ -1,25 +1,24 @@
 <script setup>
+// 现在 task 是一个对象：{ id, name, done, created_at }
 const props = defineProps({
-    task: String,
-    index: Number
+    task: Object
 })
 
 const emit = defineEmits(['remove'])
 
 function handleRemove() {
-    emit('remove', props.index)
+    emit('remove', props.task.id)   // 把任务的 id 发给父组件（不再用 index）
 }
 </script>
 
 <template>
     <li>
-        <span>{{ task }}</span>
+        <span>{{ task.name }}</span>
         <button class="del" @click="handleRemove">删除</button>
     </li>
 </template>
 
 <style scoped>
-/* 这个组件的样式：只管"一条任务"长什么样 */
 li {
     display: flex;
     justify-content: space-between;

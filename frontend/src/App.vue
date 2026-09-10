@@ -1,21 +1,39 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import TaskItem from './components/TaskItem.vue'
+
+const API = 'http://localhost:5000'   // 后端的地址
 
 const newTask = ref('')
 const tasks = ref([])
 
-function addTask() {
-    const text = newTask.value
-    if (text === '') {
-        return
-    }
-    tasks.value.push(text)
-    newTask.value = ''
+// 从后端拉取任务列表
+async function loadTasks() {
+    const res = await fetch(`${API}/tasks`)   // 发 GET 请求
+    tasks.value = await res.json()            // 把返回的 JSON 转成 JS 对象
 }
 
-function removeTask(index) {
-    tasks.value.splice(index, 1)
+// 页面加载完成后，执行一次 loadTasks
+onMounted(loadTasks)
+
+// 添加任务：调后端的 POST 接口
+async function addTask() {
+    const name = newTask.value
+    if (name === '') return
+
+    await fetch(`${API}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),   // JS 对象 → JSON 字符串
+    })
+    newTask.value = ''
+    loadTasks()   // 加完重新拉一次列表
+}
+
+// 删除任务：调后端的 DELETE 接口
+async function removeTask(id) {
+    await fetch(`${API}/tasks/${id}`, { method: 'DELETE' })
+    loadTasks()   // 删完重新拉一次列表
 }
 </script>
 
@@ -31,18 +49,15 @@ function removeTask(index) {
 
     <ul class="list">
         <TaskItem
-            v-for="(task, index) in tasks"
-            :key="index"
+            v-for="task in tasks"
+            :key="task.id"
             :task="task"
-            :index="index"
             @remove="removeTask"
         />
     </ul>
 </template>
 
 <style scoped>
-/* scoped：这些样式只作用于本组件的模板，不会影响别的组件 */
-
 .title {
     color: #333;
     text-align: center;
