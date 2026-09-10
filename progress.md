@@ -11,14 +11,76 @@
 
 | 项目 | 状态 |
 |------|------|
-| 当前阶段 | 阶段零：准备与打地基（✅ 已完成） |
-| 当前章节 | 第 3 章：HTML / CSS / JavaScript 速通（✅ 已完成） |
-| 下一步 | 第 4 章：Vue 3 入门 |
-| 已完成 | 环境搭建 + Git 基础 + HTML 骨架 + CSS 样式 + 增删功能 + 盒模型/Flex |
+| 当前阶段 | 阶段一：前后端各自跑通 |
+| 当前章节 | 第 4 章：Vue 3 入门（✅ 已完成） |
+| 下一步 | 第 5 章：Flask 入门与你的第一个接口 |
+| 已完成 | 环境搭建 + Git 基础 + 第 3 章 + 第 4 章（Vue 完整 TODO） |
 
 ---
 
 ## 二、记录（按时间倒序）
+
+### 2026-09-10 · 第 4 章完成：美化 + 清理 🎉
+
+**做了什么：**
+- 给 Vue 版 TODO 加上样式：全局 body 样式放 `src/style.css`，组件样式用 `<style scoped>` 分别写在 `App.vue` 和 `TaskItem.vue`。
+- 删除没用的 `HelloWorld.vue` 和 `src/assets/` 里的示例图片。
+
+**学到了什么：**
+- `<style scoped>`：样式只作用于当前组件、不泄露；全局样式（body）放 `style.css`。
+- 组件各自维护自己的样式，职责更清晰。
+
+**里程碑**：第 4 章全部完成 ✅。Vue 版 TODO（增删 + 条件渲染 + 组件化 + 样式）功能与第 3 章一致。
+
+### 2026-09-10 · 第 4 章：组件拆分（props 与 emit）
+
+**做了什么：**
+- 新建 `TaskItem.vue` 组件，把"一条任务"从 `App.vue` 里拆出来。
+- `App.vue` 用 `<TaskItem>` + `v-for` 渲染列表。
+
+**学到了什么：**
+- 组件化：把界面拆成职责单一的独立组件。
+- props（父 → 子）：父组件用 `:task="task"` 传数据，子组件用 `defineProps` 接收。
+- emit（子 → 父）：子组件用 `defineEmits` 声明、`emit('remove', index)` 发事件，父组件用 `@remove` 监听。
+- 单向数据流：数据只在父组件手里，子组件要改数据必须"上报"，由父改。
+
+### 2026-09-10 · 第 4 章：删除 + v-if（条件渲染）
+
+**做了什么：**
+- 给每条任务加"删除"按钮，`removeTask(index)` 用 `splice` 从响应式数组删任务。
+- 加 `v-if`，列表为空时显示提示语"还没有任务，先添加一条吧～"。
+
+**学到了什么：**
+- 响应式删除：`splice` 一下数组，对应的 `<li>` 自动消失，不需要第 3 章那样手动 `remove()`。
+- 事件处理传参：`@click="removeTask(index)"`（带括号、传参数）对比 `@click="addTask"`（不带括号）。
+- `v-if` 条件渲染：条件为真才渲染元素，为假则从页面移除。
+
+### 2026-09-10 · 第 4 章：用 Vue 重写 TODO（添加 + 列表）
+
+**做了什么：**
+- 把 `App.vue` 重写成 TODO 页面，实现"添加 + 显示列表"。
+- 认识了 `ref` 响应式数据，以及 `v-model`、`v-for`、`@click`、`{{ }}` 这几个核心指令。
+
+**学到了什么：**
+- `ref` 声明响应式数据：script 里 `.value` 访问，模板里直接写变量名。
+- `v-model` 双向绑定：一行替代第 3 章的"手动读值 + 手动清空"。
+- `v-for` 列表渲染：数据变，界面自动渲染，不再手动 createElement/appendChild。
+- `@click` 事件绑定（等价于 `v-on:click`，等价于第 3 章的 addEventListener）。
+- 数据驱动视图：只 `push` 数据，不操作 DOM。
+
+### 2026-09-10 · 第 4 章开始：用 Vite 创建 Vue 项目
+
+**做了什么：**
+- 用 `npm create vite@latest frontend -- --template vue` 生成 Vue 项目骨架。
+- 用 `npm install` 安装依赖（vue、vite 等）。
+- 认识了项目的 4 个关键文件：`index.html`、`package.json`、`src/main.js`、`src/App.vue`。
+
+**学到了什么：**
+- Vue 的核心思想：数据驱动视图（声明式 + 响应式），对比第 3 章手动操作 DOM 的痛点。
+- 组件化：界面拆成可复用的 `.vue` 单文件组件（template + script + style）。
+- Vite：构建工具，负责脚手架、开发服务器、打包。
+- 启动流程：index.html → main.js → `createApp(App).mount('#app')` → 渲染模板。
+- `package.json`：记录依赖（dependencies）和脚本（scripts，`npm run dev` = `vite`）。
 
 ### 2026-09-10 · 第 3 章完成：盒模型与 Flex 布局 🎉
 
