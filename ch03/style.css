@@ -1,52 +1,76 @@
-/* CSS 基本语法：选择器 { 属性: 值; }                      */
-/* 每一条规则 = "要装饰谁" + "装饰成什么样"                 */
+/* CSS 基本语法：选择器 { 属性: 值; } */
 
-/* —— 元素选择器：直接写标签名，选中页面上所有同名标签 —— */
+/* ============ 盒模型 ============
+   每个元素都是一个"盒子"，从里到外四层：
+   content(内容) → padding(内边距) → border(边框) → margin(外边距)
+   记忆口诀：margin 是我和别人离多远（往外推），padding 是我内部内容离边框多远（往里缩） */
+
 body {
-    font-family: "Microsoft YaHei", sans-serif;  /* 字体：优先微软雅黑 */
-    background-color: #f5f5f5;                   /* 页面背景：浅灰 */
-    max-width: 600px;                            /* 内容最大宽度 600 像素 */
-    margin: 40px auto;                           /* 上下留 40px、左右自动 → 整体居中 */
+    font-family: "Microsoft YaHei", sans-serif;
+    background-color: #f5f5f5;
+    max-width: 600px;
+    margin: 40px auto;      /* 外边距：上下 40px、左右自动(居中) */
+    padding: 0 20px;        /* 内边距：左右各留 20px，内容不贴屏幕边 */
 }
 
-/* —— 类选择器：前面加一个小数点 .，选中所有 class="这个名字" 的元素 —— */
 .title {
-    color: #333;           /* 文字颜色：深灰 */
-    text-align: center;    /* 文字水平居中 */
+    color: #333;
+    text-align: center;
+    margin-bottom: 24px;    /* 标题和下面的输入区拉开距离 */
 }
 
 .subtitle {
-    color: #666;           /* 比标题浅一点的灰 */
+    color: #666;
+    margin-top: 32px;       /* 和上面的输入区拉开距离 */
+}
+
+/* ============ Flex 布局 ============
+   容器加 display: flex，子元素就横着排一行 */
+
+.add-row {
+    display: flex;   /* 让"输入框 + 按钮"在一行 */
+    gap: 10px;       /* 子元素之间的间距 */
 }
 
 .input {
-    width: 300px;             /* 宽度 */
-    padding: 10px;            /* 内边距：框里内容四周留白，不贴边 */
-    font-size: 16px;          /* 字号 */
-    border: 1px solid #ccc;   /* 边框：1 像素、实线、浅灰 */
-    border-radius: 6px;       /* 圆角半径：值越大角越圆 */
+    flex: 1;         /* 占满剩余宽度，把按钮挤到右边 */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
 }
 
 .btn {
-    padding: 10px 20px;        /* 上下 10px、左右 20px */
+    padding: 10px 20px;
     font-size: 16px;
-    background-color: #4caf50; /* 背景色：绿色 */
-    color: white;              /* 文字颜色：白色 */
-    border: none;              /* 去掉按钮默认的边框 */
+    background-color: #4caf50;
+    color: white;
+    border: none;
     border-radius: 6px;
-    cursor: pointer;           /* 鼠标移上去变成小手，提示"可点击" */
+    cursor: pointer;
 }
 
+/* 列表项：用 flex 让"文字靠左、删除按钮靠右"，做成卡片样式 */
 .list {
+    list-style: none;  /* 去掉列表默认的小圆点 */
+    padding: 0;        /* 去掉 <ul> 默认的左边留白 */
+}
+
+.list li {
+    display: flex;
+    justify-content: space-between;  /* 两端对齐：文字最左、按钮最右 */
+    align-items: center;             /* 垂直方向居中 */
+    padding: 10px 14px;
+    margin-bottom: 8px;              /* 每张卡片之间留点距离 */
+    background-color: white;         /* 白卡片 */
+    border-radius: 6px;
     font-size: 18px;
-    line-height: 1.8;          /* 行高：1.8 倍字号，列表项之间更宽松 */
 }
 
 .del {
-    margin-left: 12px;         /* 和前面的文字拉开距离 */
     padding: 4px 10px;
     font-size: 14px;
-    background-color: #e74c3c; /* 红色背景，暗示"危险操作" */
+    background-color: #e74c3c;
     color: white;
     border: none;
     border-radius: 4px;

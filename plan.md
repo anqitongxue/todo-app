@@ -223,4 +223,4 @@ todo-app/
 
 ---
 
-> 进度：第 1 章（开发环境）、第 2 章（Git 基础）已完成 ✅。下一步：第 3 章（HTML / CSS / JavaScript 速通）。
+> 进度：第 1 章（开发环境）、第 2 章（Git 基础）、第 3 章（HTML / CSS / JavaScript）已完成 ✅。下一步：第 4 章（Vue 3 入门）。
