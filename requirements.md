@@ -56,6 +56,7 @@
 | 2026-08-24 | 文档文件名统一用小写字母 | 所有 md 文件（plan / requirements / progress / glossary）均小写 |
 | 2026-08-24 | 跑 Git 命令用 Git Bash，避免中文乱码 | 建议把 VS Code 默认终端设为 Git Bash |
 | 2026-09-10 | 后续所有提交都直接提交（推送）到 GitHub | 每次 commit 后紧接着 git push origin main，不留本地未推送的提交 |
+| 2026-09-10 | 任务表增加"添加时间"和"删除标记"两个字段；删除采用软删除（不物理删除） | ALTER TABLE 加 created_at（自动填时间）和 is_deleted 列；删除改成 UPDATE is_deleted=TRUE |
 
 ---
 

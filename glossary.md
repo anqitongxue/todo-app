@@ -85,6 +85,8 @@
 - **事务 / commit**：数据库的增删改默认先"暂存"，`commit()` 才真正写入；出错可回滚。
 - **ORM**：对象关系映射，用 Python 对象操作数据库，框架自动转成 SQL（如 SQLAlchemy）。
 - **requirements.txt**：记录 Python 项目依赖的清单，用 `pip install -r requirements.txt` 一键安装。
+- **软删除（Soft Delete）**：删除时不是真的从数据库删数据，而是打一个"已删除"标记（如 `is_deleted=1`），好处是能恢复、保留历史。
+- **时间戳（Timestamp）**：记录数据创建/更新时间，MySQL 里 `DEFAULT CURRENT_TIMESTAMP` 可插入时自动填当前时间。
 - **SQL**：用来和数据库对话的语言（增、删、改、查）。
 - **持久化（Persistence）**：把数据存下来，程序重启也不丢。
 - **root 账号**：MySQL 的超级管理员账号，权限最高。后面用代码连数据库时，就是用它（或它创建的其他账号）登录。
