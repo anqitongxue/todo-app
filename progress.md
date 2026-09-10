@@ -12,13 +12,42 @@
 | 项目 | 状态 |
 |------|------|
 | 当前阶段 | 阶段一：前后端各自跑通 |
-| 当前章节 | 第 5 章：Flask 入门与你的第一个接口（功能完成，待提交） |
-| 下一步 | 第 6 章：MySQL 入门与数据持久化 |
-| 已完成 | 环境搭建 + Git 基础 + 第 3 章 + 第 4 章 + Flask 完整 CRUD 接口 |
+| 当前章节 | 第 6 章：MySQL 入门与数据持久化（✅ 已完成） |
+| 下一步 | 第 7 章：前后端打通（第一个完整闭环） |
+| 已完成 | 环境搭建 + Git 基础 + 第 3~6 章（含建库建表 + pymysql 读写） |
 
 ---
 
 ## 二、记录（按时间倒序）
+
+### 2026-09-10 · 第 6 章完成：pymysql 读写 + ORM 概念 🎉
+
+**做了什么：**
+- 装 pymysql，写 `db_demo.py`：连接 MySQL（端口 8080）、插入一条任务、查出来。
+- 装 DBeaver 可视化工具，连接数据库查看数据。
+- 学了 ORM 概念（对比原生 SQL 和 SQLAlchemy），决定本项目暂用 pymysql 原生 SQL。
+
+**学到了什么：**
+- `pymysql.connect()` 连接、`cursor.execute()` 执行 SQL、`conn.commit()` 提交、`fetchall()` 取结果。
+- 事务：增删改之后要 commit 才真正写入。
+- ORM：操作对象、框架生成 SQL，类似 Vue 之于 DOM。
+- 安全：密码不能写死在代码里、不能提交进 Git。
+- `requirements.txt` 记录依赖。
+
+**里程碑**：第 6 章完成 ✅。交付物"用代码往 MySQL 写入并读出任务"达成。
+
+### 2026-09-10 · 第 6 章开始：建库建表 + 解决端口问题
+
+**做了什么：**
+- 排查 MySQL 连接问题：发现本机 MySQL 端口是 **8080**（非默认 3306），用 `-P 8080` 连接成功。
+- 创建数据库 `todo_app` 和 `tasks` 表（id 自增主键、name、done）。
+
+**学到了什么：**
+- 关系型数据库核心概念：表 / 行 / 列 / 主键 / 外键。
+- `CREATE DATABASE` 建库、`CREATE TABLE` 建表。
+- 列类型：INT、VARCHAR、BOOLEAN；`AUTO_INCREMENT` 自增主键。
+- `ERROR 2003` = 连不上 MySQL（端口不对或服务没起）。
+- MySQL 的 BOOLEAN 实际存成 tinyint(1)。
 
 ### 2026-09-10 · 第 5 章：DELETE/PUT + 路径参数
 
