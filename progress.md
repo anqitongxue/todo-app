@@ -12,13 +12,60 @@
 | 项目 | 状态 |
 |------|------|
 | 当前阶段 | 阶段一：前后端各自跑通 |
-| 当前章节 | 第 4 章：Vue 3 入门（✅ 已完成） |
-| 下一步 | 第 5 章：Flask 入门与你的第一个接口 |
-| 已完成 | 环境搭建 + Git 基础 + 第 3 章 + 第 4 章（Vue 完整 TODO） |
+| 当前章节 | 第 5 章：Flask 入门与你的第一个接口（功能完成，待提交） |
+| 下一步 | 第 6 章：MySQL 入门与数据持久化 |
+| 已完成 | 环境搭建 + Git 基础 + 第 3 章 + 第 4 章 + Flask 完整 CRUD 接口 |
 
 ---
 
 ## 二、记录（按时间倒序）
+
+### 2026-09-10 · 第 5 章：DELETE/PUT + 路径参数
+
+**做了什么：**
+- 加 `DELETE /tasks/<id>` 和 `PUT /tasks/<id>` 接口，完成后端增删改查全套 CRUD。
+- 认识了路径参数 `<int:id>`。
+
+**学到了什么：**
+- 路径参数：`<int:id>` 从 URL 里取整数参数，用来定位具体资源（如 `/tasks/3`）。
+- 遍历列表找 id 匹配、`list.remove()` 删除、找不到返回 404。
+- `data.get('key', 默认值)` 的安全取值写法。
+
+### 2026-09-10 · 第 5 章：POST 新增接口 + 状态码 + curl
+
+**做了什么：**
+- 加 `POST /tasks` 接口，用 `request.get_json()` 读请求体，新增任务。
+- 认识了 HTTP 状态码（200/201/400/404/500）。
+
+**学到了什么：**
+- 同一个 URL `/tasks`，用不同 HTTP 方法实现不同操作（GET 查 / POST 增）。
+- `methods=['POST']` 指定路由接受的方法（默认只有 GET）。
+- `request.get_json()` 读前端发来的 JSON；`data.get('name')` 安全取值。
+- 状态码：`return jsonify(...), 201` 返回"数据 + 状态码"。
+
+### 2026-09-10 · 第 5 章：返回 JSON + HTTP 方法 + RESTful
+
+**做了什么：**
+- 把 `app.py` 升级成返回 JSON：`GET /tasks` 用 `jsonify` 返回任务列表。
+- 认识了 HTTP 方法（GET/POST/PUT/DELETE）和 RESTful 风格。
+
+**学到了什么：**
+- 后端要返回"结构化数据"（JSON），而不是给人看的纯文本。
+- RESTful：URL 用名词表资源（`/tasks`）、HTTP 方法表操作（GET 查 / POST 增 / PUT 改 / DELETE 删）。
+- `jsonify()` 把 Python 的列表/字典转成 JSON 返回。
+- Python 的 dict（字典）≈ JS 的对象，list（列表）≈ JS 的数组。
+
+### 2026-09-10 · 第 5 章开始：venv + 第一个 Flask 接口
+
+**做了什么：**
+- 创建 `backend` 目录，用 `python -m venv .venv` 建虚拟环境。
+- 用 pip 在虚拟环境里安装 Flask 3.1.3。
+- 写 `backend/app.py`，定义第一个路由 `/`，返回一段文字。
+
+**学到了什么：**
+- 后端：跑在服务器上、处理请求、返回数据的部分，用 Flask 写。
+- venv：给项目独立的 Python 环境，避免依赖冲突；pip 是 Python 的包管理器。
+- Flask 基本结构：`Flask(__name__)` 创建应用、`@app.route('/')` 定义路由、`app.run()` 启动。
 
 ### 2026-09-10 · 第 4 章完成：美化 + 清理 🎉
 
