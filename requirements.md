@@ -55,6 +55,7 @@
 | 2026-08-24 | 维护一份进度与学习记录，持续记录"做了什么、学到了什么" | 建立 [progress.md](progress.md)，每完成一小步就追加记录并更新"项目当前状态" |
 | 2026-08-24 | 文档文件名统一用小写字母 | 所有 md 文件（plan / requirements / progress / glossary）均小写 |
 | 2026-08-24 | 跑 Git 命令用 Git Bash，避免中文乱码 | 建议把 VS Code 默认终端设为 Git Bash |
+| 2026-09-10 | 后续所有提交都直接提交（推送）到 GitHub | 每次 commit 后紧接着 git push origin main，不留本地未推送的提交 |
 
 ---
 
