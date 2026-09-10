@@ -1,0 +1,54 @@
+/* CSS 基本语法：选择器 { 属性: 值; }                      */
+/* 每一条规则 = "要装饰谁" + "装饰成什么样"                 */
+
+/* —— 元素选择器：直接写标签名，选中页面上所有同名标签 —— */
+body {
+    font-family: "Microsoft YaHei", sans-serif;  /* 字体：优先微软雅黑 */
+    background-color: #f5f5f5;                   /* 页面背景：浅灰 */
+    max-width: 600px;                            /* 内容最大宽度 600 像素 */
+    margin: 40px auto;                           /* 上下留 40px、左右自动 → 整体居中 */
+}
+
+/* —— 类选择器：前面加一个小数点 .，选中所有 class="这个名字" 的元素 —— */
+.title {
+    color: #333;           /* 文字颜色：深灰 */
+    text-align: center;    /* 文字水平居中 */
+}
+
+.subtitle {
+    color: #666;           /* 比标题浅一点的灰 */
+}
+
+.input {
+    width: 300px;             /* 宽度 */
+    padding: 10px;            /* 内边距：框里内容四周留白，不贴边 */
+    font-size: 16px;          /* 字号 */
+    border: 1px solid #ccc;   /* 边框：1 像素、实线、浅灰 */
+    border-radius: 6px;       /* 圆角半径：值越大角越圆 */
+}
+
+.btn {
+    padding: 10px 20px;        /* 上下 10px、左右 20px */
+    font-size: 16px;
+    background-color: #4caf50; /* 背景色：绿色 */
+    color: white;              /* 文字颜色：白色 */
+    border: none;              /* 去掉按钮默认的边框 */
+    border-radius: 6px;
+    cursor: pointer;           /* 鼠标移上去变成小手，提示"可点击" */
+}
+
+.list {
+    font-size: 18px;
+    line-height: 1.8;          /* 行高：1.8 倍字号，列表项之间更宽松 */
+}
+
+.del {
+    margin-left: 12px;         /* 和前面的文字拉开距离 */
+    padding: 4px 10px;
+    font-size: 14px;
+    background-color: #e74c3c; /* 红色背景，暗示"危险操作" */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
