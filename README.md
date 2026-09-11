@@ -1,5 +1,9 @@
 # TODO.app
 
+![Vue](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3-000000?logo=flask&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8%2B-4479A1?logo=mysql&logoColor=white)
+
 一个前后端分离的 **TODO（待办事项）应用**，支持多用户注册登录、任务分类、完成状态、筛选与搜索。
 
 ## 功能
