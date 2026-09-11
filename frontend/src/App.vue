@@ -1,31 +1,42 @@
 <script setup>
+// ========== App.vue：应用主组件 ==========
+// 职责：登录/注册界面、任务增删查、完成状态切换、
+//       状态筛选（走后端）、关键词搜索（computed）、分类/截止时间输入
 import { ref, onMounted, computed } from 'vue'
 import TaskItem from './components/TaskItem.vue'
 
-const API = ''   // 空字符串 = 相对路径；开发时由 Vite 代理转发，生产时由 Nginx 代理
+// 后端接口地址前缀：空字符串 = 相对路径。
+// 开发时由 Vite 代理转发到后端，生产时由 Nginx 代理转发。
+const API = ''
 
-// 登录相关状态
-const username = ref('')
-const password = ref('')
-const loggedIn = ref(false)
-const currentUser = ref('')
+// ---------- 登录相关状态 ----------
+const username = ref('')      // 用户名输入框内容
+const password = ref('')      // 密码输入框内容
+const loggedIn = ref(false)   // 是否已登录
+const currentUser = ref('')   // 当前登录的用户名
 
-// 任务相关状态
-const newTask = ref('')
-const newCategory = ref('')
-const newDueDate = ref('')
-const tasks = ref([])
-const filter = ref('all')   // 筛选状态：'all'（全部）| 'active'（进行中）| 'done'（已完成）
-const search = ref('')      // 搜索关键词
+// ---------- 任务相关状态 ----------
+const newTask = ref('')        // 新增任务名称
+const newCategory = ref('')    // 新增任务分类
+const newDueDate = ref('')     // 新增任务截止时间（日期字符串）
+const tasks = ref([])          // 从后端拉取的任务列表
+const filter = ref('all')      // 状态筛选：'all'（全部）| 'active'（进行中）| 'done'（已完成）
+const search = ref('')         // 搜索关键词（用于前端按名称过滤）
 
-// 计算属性：只做"关键词搜索"（状态筛选已交给后端，这里不再筛状态）
+// 计算属性 filteredTasks：返回展示用的任务列表。
+// 只做"关键词搜索"（按任务名称模糊匹配，忽略大小写）；
+// 状态筛选已交给后端处理，这里不再重复筛状态。
+// 返回值：过滤后的任务数组；关键词为空时原样返回 tasks。
 const filteredTasks = computed(() => {
-    const kw = search.value.trim().toLowerCase()
-    if (!kw) return tasks.value
+    const kw = search.value.trim().toLowerCase()   // 去掉首尾空格并转小写，便于比较
+    if (!kw) return tasks.value                     // 无关键词，直接返回全部任务
     return tasks.value.filter(t => t.name.toLowerCase().includes(kw))
 })
 
-// 页面加载时：检查是否已登录
+// checkLogin：页面加载时检查是否已登录。
+// 做什么：向后端 /me 发 GET 请求（携带 cookie，credentials: 'include'）。
+// 若已登录（res.ok 为真），读取返回的用户名、标记已登录，并拉取任务列表。
+// 参数：无。返回值：无（async 函数）。
 async function checkLogin() {
     const res = await fetch(`${API}/me`, { credentials: 'include' })
     if (res.ok) {
@@ -36,7 +47,10 @@ async function checkLogin() {
     }
 }
 
-// 登录
+// login：处理登录表单提交。
+// 做什么：把用户名、密码 POST 到后端 /login（携带 cookie）。
+// 成功：标记已登录、记录当前用户名并拉取任务；失败：弹窗提示。
+// 参数：无（从 username/password 响应式状态读取）。返回值：无。
 async function login() {
     const res = await fetch(`${API}/login`, {
         method: 'POST',
@@ -53,7 +67,10 @@ async function login() {
     }
 }
 
-// 注册（成功后直接登录）
+// register：处理注册表单提交。
+// 做什么：把用户名、密码 POST 到后端 /register。
+// 成功后直接调用 login() 完成登录；失败（如用户名已存在）弹窗提示。
+// 参数：无。返回值：无。
 async function register() {
     const res = await fetch(`${API}/register`, {
         method: 'POST',
@@ -67,7 +84,9 @@ async function register() {
     }
 }
 
-// 退出
+// logout：退出登录。
+// 做什么：向后端 /logout 发 POST 清除会话 cookie，并清空本地登录状态与任务列表。
+// 参数：无。返回值：无。
 async function logout() {
     await fetch(`${API}/logout`, { method: 'POST', credentials: 'include' })
     loggedIn.value = false
@@ -75,26 +94,34 @@ async function logout() {
     tasks.value = []
 }
 
-// 拉取任务列表（把状态 filter 作为查询参数传给后端，让后端筛）
+// loadTasks：从后端拉取任务列表。
+// 做什么：向后端 /tasks 发 GET；若当前筛选不是 'all'，则拼接 ?status= 查询参数，由后端完成状态筛选。
+// 返回结果直接写入 tasks 响应式状态。
+// 参数：无。返回值：无。
 async function loadTasks() {
     let url = `${API}/tasks`
     if (filter.value !== 'all') {
-        url += `?status=${filter.value}`
+        url += `?status=${filter.value}`   // 把状态筛选交给后端处理
     }
     const res = await fetch(url, { credentials: 'include' })
     tasks.value = await res.json()
 }
 
-// 切换筛选：改 filter 状态，并重新从后端拉取
+// setFilter：切换状态筛选。
+// 参数 f：'all' | 'active' | 'done'。返回值：无。
+// 做什么：更新 filter 状态，然后重新从后端拉取对应状态的任务。
 function setFilter(f) {
     filter.value = f
     loadTasks()
 }
 
-// 添加任务
+// addTask：添加一条新任务。
+// 做什么：把任务名称、分类、截止时间 POST 到后端 /tasks；
+// 成功后清空输入框并重新拉取任务列表。名称为空时直接返回（不提交）。
+// 参数：无（从 newTask/newCategory/newDueDate 读取）。返回值：无。
 async function addTask() {
     const name = newTask.value
-    if (name === '') return
+    if (name === '') return   // 名称为空时不提交
     await fetch(`${API}/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,25 +134,31 @@ async function addTask() {
     loadTasks()
 }
 
-// 删除任务
+// removeTask：删除指定任务。
+// 参数 id：要删除的任务 ID。返回值：无。
+// 做什么：向后端 /tasks/{id} 发 DELETE 请求，成功后重新拉取任务列表。
 async function removeTask(id) {
     await fetch(`${API}/tasks/${id}`, { method: 'DELETE', credentials: 'include' })
     loadTasks()
 }
 
-// 切换完成状态
+// toggleTask：切换任务的完成状态。
+// 参数：id 为任务 ID；done 为新的完成状态（true/false，由子组件 TaskItem 传入）。
+// 返回值：无。
+// 做什么：先在本地找到该任务，再向后端 /tasks/{id} 发 PUT 更新完成状态，成功后重新拉取。
 async function toggleTask(id, done) {
     const task = tasks.value.find(t => t.id === id)
-    if (!task) return
+    if (!task) return   // 找不到该任务时不做任何操作
     await fetch(`${API}/tasks/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ name: task.name, done }),   // name 要原样带上，否则会被清空
+        body: JSON.stringify({ name: task.name, done }),   // name 必须原样带上，否则后端会把名称清空
     })
     loadTasks()
 }
 
+// 组件挂载完成后立即执行 checkLogin，实现"刷新页面自动恢复登录状态"
 onMounted(checkLogin)
 </script>
 
@@ -161,18 +194,22 @@ onMounted(checkLogin)
                 </div>
             </div>
 
+            <!-- 状态筛选按钮组：点击调用 setFilter 切换 filter，并重新走后端查询 -->
             <div class="filters">
                 <button :class="{ active: filter === 'all' }" @click="setFilter('all')">全部</button>
                 <button :class="{ active: filter === 'active' }" @click="setFilter('active')">进行中</button>
                 <button :class="{ active: filter === 'done' }" @click="setFilter('done')">已完成</button>
             </div>
 
+            <!-- 搜索框：内容绑定 search，实时由 computed filteredTasks 做前端关键词过滤 -->
             <input class="input search" v-model="search" placeholder="搜索任务...">
 
             <p class="empty" v-if="filteredTasks.length === 0">
                 {{ (filter === 'all' && !search) ? '还没有任务，先添加一条吧～' : '没有匹配的任务' }}
             </p>
 
+            <!-- 任务列表：遍历 filteredTasks 渲染 TaskItem 子组件；
+                 @remove / @toggle 是子组件向上抛的自定义事件，分别绑定到删除、切换处理函数 -->
             <ul class="list">
                 <TaskItem
                     v-for="task in filteredTasks"
