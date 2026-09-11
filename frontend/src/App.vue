@@ -130,61 +130,71 @@ onMounted(checkLogin)
 </script>
 
 <template>
-    <h1 class="title">我的任务清单</h1>
+    <div class="app">
+        <h1 class="title">我的任务清单</h1>
 
-    <!-- 未登录：显示登录/注册表单 -->
-    <div v-if="!loggedIn" class="login-box">
-        <input class="input" v-model="username" placeholder="用户名">
-        <input class="input" v-model="password" type="password" placeholder="密码">
-        <div class="login-actions">
-            <button class="btn" @click="login">登录</button>
-            <button class="btn ghost" @click="register">注册</button>
-        </div>
-    </div>
-
-    <!-- 已登录：显示 TODO 和退出按钮 -->
-    <div v-else>
-        <p class="welcome">
-            👋 {{ currentUser }}
-            <button class="logout" @click="logout">退出</button>
-        </p>
-
-        <div class="add-row">
-            <input class="input" v-model="newTask" placeholder="输入一个新任务...">
-            <input class="input category" v-model="newCategory" placeholder="分类（如：工作）">
-            <input class="input date" type="date" v-model="newDueDate">
-            <button class="btn" @click="addTask">添加</button>
+        <!-- 未登录：显示登录/注册表单 -->
+        <div v-if="!loggedIn" class="login-box">
+            <input class="input" v-model="username" placeholder="用户名">
+            <input class="input" v-model="password" type="password" placeholder="密码">
+            <div class="login-actions">
+                <button class="btn" @click="login">登录</button>
+                <button class="btn ghost" @click="register">注册</button>
+            </div>
         </div>
 
-        <div class="filters">
-            <button :class="{ active: filter === 'all' }" @click="setFilter('all')">全部</button>
-            <button :class="{ active: filter === 'active' }" @click="setFilter('active')">进行中</button>
-            <button :class="{ active: filter === 'done' }" @click="setFilter('done')">已完成</button>
+        <!-- 已登录：显示 TODO 和退出按钮 -->
+        <div v-else>
+            <p class="welcome">
+                👋 {{ currentUser }}
+                <button class="logout" @click="logout">退出</button>
+            </p>
+
+            <div class="add-row">
+                <input class="input" v-model="newTask" placeholder="输入一个新任务...">
+                <input class="input category" v-model="newCategory" placeholder="分类（如：工作）">
+                <input class="input date" type="date" v-model="newDueDate">
+                <button class="btn" @click="addTask">添加</button>
+            </div>
+
+            <div class="filters">
+                <button :class="{ active: filter === 'all' }" @click="setFilter('all')">全部</button>
+                <button :class="{ active: filter === 'active' }" @click="setFilter('active')">进行中</button>
+                <button :class="{ active: filter === 'done' }" @click="setFilter('done')">已完成</button>
+            </div>
+
+            <input class="input search" v-model="search" placeholder="搜索任务...">
+
+            <p class="empty" v-if="filteredTasks.length === 0">
+                {{ (filter === 'all' && !search) ? '还没有任务，先添加一条吧～' : '没有匹配的任务' }}
+            </p>
+
+            <ul class="list">
+                <TaskItem
+                    v-for="task in filteredTasks"
+                    :key="task.id"
+                    :task="task"
+                    @remove="removeTask"
+                    @toggle="toggleTask"
+                />
+            </ul>
         </div>
-
-        <input class="input search" v-model="search" placeholder="搜索任务...">
-
-        <p class="empty" v-if="filteredTasks.length === 0">
-            {{ (filter === 'all' && !search) ? '还没有任务，先添加一条吧～' : '没有匹配的任务' }}
-        </p>
-
-        <ul class="list">
-            <TaskItem
-                v-for="task in filteredTasks"
-                :key="task.id"
-                :task="task"
-                @remove="removeTask"
-                @toggle="toggleTask"
-            />
-        </ul>
     </div>
 </template>
 
 <style scoped>
+.app {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 28px;
+}
+
 .title {
-    color: #333;
+    color: #2e7d32;
     text-align: center;
-    margin-bottom: 24px;
+    font-size: 24px;
+    margin: 0 0 24px;
 }
 
 .login-box {
@@ -200,22 +210,34 @@ onMounted(checkLogin)
     gap: 10px;
 }
 
+.login-actions .btn {
+    flex: 1;
+}
+
 .add-row {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 16px;
 }
 
 .input {
     flex: 1;
-    padding: 10px;
+    padding: 10px 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
 }
 
 .category {
-    flex: 0 0 140px;
-    max-width: 140px;
+    flex: 0 0 130px;
+    max-width: 130px;
 }
 
 .date {
@@ -229,8 +251,17 @@ onMounted(checkLogin)
     background-color: #4caf50;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+    background-color: #43a047;
+}
+
+.btn:active {
+    transform: scale(0.97);
 }
 
 .ghost {
@@ -239,9 +270,13 @@ onMounted(checkLogin)
     border: 1px solid #4caf50;
 }
 
+.ghost:hover {
+    background-color: #e8f5e9;
+}
+
 .welcome {
     color: #666;
-    margin-bottom: 16px;
+    margin: 0 0 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -250,16 +285,22 @@ onMounted(checkLogin)
 .logout {
     padding: 4px 12px;
     font-size: 14px;
-    background-color: #eee;
+    background-color: #f0f0f0;
     color: #555;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.logout:hover {
+    background-color: #e0e0e0;
 }
 
 .empty {
-    color: #999;
-    margin: 12px 0;
+    color: #aaa;
+    text-align: center;
+    margin: 20px 0;
 }
 
 .filters {
@@ -276,6 +317,11 @@ onMounted(checkLogin)
     border: none;
     border-radius: 16px;
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.filters button:hover {
+    background-color: #e0e0e0;
 }
 
 .filters button.active {
@@ -286,11 +332,12 @@ onMounted(checkLogin)
 .search {
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 </style>

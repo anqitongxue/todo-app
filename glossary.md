@@ -50,6 +50,10 @@
 - **Flex 布局（Flexbox）**：CSS 的一维布局方式，容器 `display: flex` 让子元素横/竖排列，用 `justify-content`、`align-items` 控制对齐与分布。
 - **选择器（Selector）**：CSS 里用来「选中要装饰谁」的规则，如选中所有 `<h1>` 或所有 `class="xxx"` 的元素。
 - **类（class）**：给 HTML 标签起的「分类名」，可多个标签共用，CSS 用 `.类名` 批量选中它们。
+- **伪类（:hover / :focus / :active）**：CSS 里表示元素"状态"的选择器——`:hover` 鼠标悬停、`:focus` 输入框聚焦、`:active` 按下时。
+- **box-shadow / transition**：`box-shadow` 给元素加阴影（卡片"浮起来"的立体感）；`transition` 让颜色/阴影变化平滑过渡，而不是瞬间跳变。
+- **linear-gradient（渐变）**：背景色从一种颜色平滑过渡到另一种，如 `linear-gradient(135deg, #e8f5e9, #e3f2fd)`。
+- **accent-color / text-overflow**：`accent-color` 给勾选框等表单控件设主题色；`text-overflow: ellipsis` 让超长文字显示省略号 `…`。
 - **JavaScript**：网页的"行为/大脑"，让页面能交互（点击、添加、删除、发请求）。
 - **变量（Variable）**：给数据起的名字，方便反复使用，用 `let`（可改）或 `const`（不可改）声明。
 - **数组（Array）**：用 `[]` 装一列数据，如 `["a", "b", "c"]`，数据项按顺序排。

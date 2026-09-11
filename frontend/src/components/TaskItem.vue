@@ -32,27 +32,47 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 12px 14px;
     margin-bottom: 8px;
-    background-color: white;
-    border-radius: 6px;
-    font-size: 18px;
+    background-color: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: box-shadow 0.2s, transform 0.1s;
+}
+
+li:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
 }
 
 .del {
     padding: 4px 10px;
-    font-size: 14px;
+    font-size: 13px;
+    background-color: #fdecea;
+    color: #e74c3c;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.del:hover {
     background-color: #e74c3c;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 .info {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
+}
+
+.name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cat {
@@ -61,6 +81,7 @@ li {
     background-color: #e8f5e9;
     padding: 2px 8px;
     border-radius: 10px;
+    flex-shrink: 0;
 }
 
 .due {
@@ -69,6 +90,7 @@ li {
     background-color: #fff3e0;
     padding: 2px 8px;
     border-radius: 10px;
+    flex-shrink: 0;
 }
 
 input[type="checkbox"] {
@@ -76,6 +98,7 @@ input[type="checkbox"] {
     height: 18px;
     cursor: pointer;
     flex-shrink: 0;
+    accent-color: #4caf50;
 }
 
 li.done .name {
