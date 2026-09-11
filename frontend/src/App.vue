@@ -15,12 +15,21 @@ const newTask = ref('')
 const newCategory = ref('')
 const tasks = ref([])
 const filter = ref('all')   // 筛选状态：'all'（全部）| 'active'（进行中）| 'done'（已完成）
+const search = ref('')      // 搜索关键词
 
-// 计算属性：根据 filter 算出"当前该显示哪些任务"
+// 计算属性：根据 filter（状态）和 search（关键词）算出"当前该显示哪些任务"
 const filteredTasks = computed(() => {
-    if (filter.value === 'active') return tasks.value.filter(t => !t.done)
-    if (filter.value === 'done') return tasks.value.filter(t => t.done)
-    return tasks.value   // 'all'：全部
+    let result = tasks.value
+
+    // 第一步：按状态筛
+    if (filter.value === 'active') result = result.filter(t => !t.done)
+    else if (filter.value === 'done') result = result.filter(t => t.done)
+
+    // 第二步：按关键词搜（去首尾空格 + 转小写，实现"大小写不敏感"匹配）
+    const kw = search.value.trim().toLowerCase()
+    if (kw) result = result.filter(t => t.name.toLowerCase().includes(kw))
+
+    return result
 })
 
 // 页面加载时：检查是否已登录
@@ -148,8 +157,10 @@ onMounted(checkLogin)
             <button :class="{ active: filter === 'done' }" @click="filter = 'done'">已完成</button>
         </div>
 
+        <input class="input search" v-model="search" placeholder="搜索任务...">
+
         <p class="empty" v-if="tasks.length === 0">还没有任务，先添加一条吧～</p>
-        <p class="empty" v-else-if="filteredTasks.length === 0">当前筛选下没有任务</p>
+        <p class="empty" v-else-if="filteredTasks.length === 0">没有匹配的任务</p>
 
         <ul class="list">
             <TaskItem
@@ -259,6 +270,12 @@ onMounted(checkLogin)
 .filters button.active {
     background-color: #4caf50;
     color: white;
+}
+
+.search {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
 }
 
 .list {
