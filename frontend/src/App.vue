@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import TaskItem from './components/TaskItem.vue'
 
-const API = 'http://localhost:5000'
+const API = ''   // 空字符串 = 相对路径；开发时由 Vite 代理转发，生产时由 Nginx 代理
 
 // 登录相关状态
 const username = ref('')

@@ -5,18 +5,18 @@ from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.secret_key = 'dev-secret-key-please-change'   # 给 session cookie 签名的密钥
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-please-change')   # 生产环境用环境变量
 CORS(app, supports_credentials=True)   # 允许跨域 + 允许携带 cookie（session 需要）
 
 
-# 连接数据库
+# 连接数据库（配置全部从环境变量读，本地/生产分开）
 def get_conn():
     return pymysql.connect(
-        host='localhost',
-        port=8080,
-        user='root',
+        host=os.environ.get('DB_HOST', 'localhost'),
+        port=int(os.environ.get('DB_PORT', '3306')),
+        user=os.environ.get('DB_USER', 'root'),
         password=os.environ.get('DB_PASSWORD', ''),
-        database='todo_app',
+        database=os.environ.get('DB_NAME', 'todo_app'),
         charset='utf8mb4',
     )
 
