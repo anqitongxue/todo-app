@@ -13,6 +13,7 @@ const currentUser = ref('')
 // 任务相关状态
 const newTask = ref('')
 const newCategory = ref('')
+const newDueDate = ref('')
 const tasks = ref([])
 const filter = ref('all')   // 筛选状态：'all'（全部）| 'active'（进行中）| 'done'（已完成）
 const search = ref('')      // 搜索关键词
@@ -98,10 +99,11 @@ async function addTask() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ name, category: newCategory.value }),
+        body: JSON.stringify({ name, category: newCategory.value, due_date: newDueDate.value }),
     })
     newTask.value = ''
     newCategory.value = ''
+    newDueDate.value = ''
     loadTasks()
 }
 
@@ -150,6 +152,7 @@ onMounted(checkLogin)
         <div class="add-row">
             <input class="input" v-model="newTask" placeholder="输入一个新任务...">
             <input class="input category" v-model="newCategory" placeholder="分类（如：工作）">
+            <input class="input date" type="date" v-model="newDueDate">
             <button class="btn" @click="addTask">添加</button>
         </div>
 
@@ -213,6 +216,11 @@ onMounted(checkLogin)
 .category {
     flex: 0 0 140px;
     max-width: 140px;
+}
+
+.date {
+    flex: 0 0 150px;
+    max-width: 150px;
 }
 
 .btn {

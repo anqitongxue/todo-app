@@ -21,6 +21,7 @@ function handleToggle() {
             <input type="checkbox" :checked="task.done" @change="handleToggle">
             <span class="name">{{ task.name }}</span>
             <span class="cat" v-if="task.category">{{ task.category }}</span>
+            <span class="due" v-if="task.due_date">📅 {{ task.due_date }}</span>
         </div>
         <button class="del" @click="handleRemove">删除</button>
     </li>
@@ -58,6 +59,14 @@ li {
     font-size: 12px;
     color: #4caf50;
     background-color: #e8f5e9;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.due {
+    font-size: 12px;
+    color: #f57c00;
+    background-color: #fff3e0;
     padding: 2px 8px;
     border-radius: 10px;
 }
