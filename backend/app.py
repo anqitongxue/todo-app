@@ -33,12 +33,24 @@ def get_tasks():
     if not user_id:
         return jsonify({"error": "未登录"}), 401
 
+    # 读查询参数：URL 里 ?status=done 这种，request.args 里能取到
+    status = request.args.get('status')
+
     conn = get_conn()
     cursor = conn.cursor()
-    cursor.execute(
-        "SELECT id, name, done, created_at, category FROM tasks WHERE is_deleted = 0 AND user_id = %s ORDER BY id",
-        (user_id,),
-    )
+
+    # 动态拼 SQL：固定条件（未删除 + 当前用户）写死，状态条件按参数追加
+    sql = "SELECT id, name, done, created_at, category FROM tasks WHERE is_deleted = 0 AND user_id = %s"
+    params = [user_id]
+
+    if status == 'active':
+        sql += " AND done = 0"
+    elif status == 'done':
+        sql += " AND done = 1"
+
+    sql += " ORDER BY id"
+
+    cursor.execute(sql, params)
     rows = cursor.fetchall()
     tasks = []
     for row in rows:

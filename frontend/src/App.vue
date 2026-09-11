@@ -17,19 +17,11 @@ const tasks = ref([])
 const filter = ref('all')   // 筛选状态：'all'（全部）| 'active'（进行中）| 'done'（已完成）
 const search = ref('')      // 搜索关键词
 
-// 计算属性：根据 filter（状态）和 search（关键词）算出"当前该显示哪些任务"
+// 计算属性：只做"关键词搜索"（状态筛选已交给后端，这里不再筛状态）
 const filteredTasks = computed(() => {
-    let result = tasks.value
-
-    // 第一步：按状态筛
-    if (filter.value === 'active') result = result.filter(t => !t.done)
-    else if (filter.value === 'done') result = result.filter(t => t.done)
-
-    // 第二步：按关键词搜（去首尾空格 + 转小写，实现"大小写不敏感"匹配）
     const kw = search.value.trim().toLowerCase()
-    if (kw) result = result.filter(t => t.name.toLowerCase().includes(kw))
-
-    return result
+    if (!kw) return tasks.value
+    return tasks.value.filter(t => t.name.toLowerCase().includes(kw))
 })
 
 // 页面加载时：检查是否已登录
@@ -82,10 +74,20 @@ async function logout() {
     tasks.value = []
 }
 
-// 拉取任务列表
+// 拉取任务列表（把状态 filter 作为查询参数传给后端，让后端筛）
 async function loadTasks() {
-    const res = await fetch(`${API}/tasks`, { credentials: 'include' })
+    let url = `${API}/tasks`
+    if (filter.value !== 'all') {
+        url += `?status=${filter.value}`
+    }
+    const res = await fetch(url, { credentials: 'include' })
     tasks.value = await res.json()
+}
+
+// 切换筛选：改 filter 状态，并重新从后端拉取
+function setFilter(f) {
+    filter.value = f
+    loadTasks()
 }
 
 // 添加任务
@@ -152,15 +154,16 @@ onMounted(checkLogin)
         </div>
 
         <div class="filters">
-            <button :class="{ active: filter === 'all' }" @click="filter = 'all'">全部</button>
-            <button :class="{ active: filter === 'active' }" @click="filter = 'active'">进行中</button>
-            <button :class="{ active: filter === 'done' }" @click="filter = 'done'">已完成</button>
+            <button :class="{ active: filter === 'all' }" @click="setFilter('all')">全部</button>
+            <button :class="{ active: filter === 'active' }" @click="setFilter('active')">进行中</button>
+            <button :class="{ active: filter === 'done' }" @click="setFilter('done')">已完成</button>
         </div>
 
         <input class="input search" v-model="search" placeholder="搜索任务...">
 
-        <p class="empty" v-if="tasks.length === 0">还没有任务，先添加一条吧～</p>
-        <p class="empty" v-else-if="filteredTasks.length === 0">没有匹配的任务</p>
+        <p class="empty" v-if="filteredTasks.length === 0">
+            {{ (filter === 'all' && !search) ? '还没有任务，先添加一条吧～' : '没有匹配的任务' }}
+        </p>
 
         <ul class="list">
             <TaskItem
