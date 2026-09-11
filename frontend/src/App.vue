@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import TaskItem from './components/TaskItem.vue'
 
 const API = 'http://localhost:5000'
@@ -14,6 +14,14 @@ const currentUser = ref('')
 const newTask = ref('')
 const newCategory = ref('')
 const tasks = ref([])
+const filter = ref('all')   // 筛选状态：'all'（全部）| 'active'（进行中）| 'done'（已完成）
+
+// 计算属性：根据 filter 算出"当前该显示哪些任务"
+const filteredTasks = computed(() => {
+    if (filter.value === 'active') return tasks.value.filter(t => !t.done)
+    if (filter.value === 'done') return tasks.value.filter(t => t.done)
+    return tasks.value   // 'all'：全部
+})
 
 // 页面加载时：检查是否已登录
 async function checkLogin() {
@@ -134,11 +142,18 @@ onMounted(checkLogin)
             <button class="btn" @click="addTask">添加</button>
         </div>
 
+        <div class="filters">
+            <button :class="{ active: filter === 'all' }" @click="filter = 'all'">全部</button>
+            <button :class="{ active: filter === 'active' }" @click="filter = 'active'">进行中</button>
+            <button :class="{ active: filter === 'done' }" @click="filter = 'done'">已完成</button>
+        </div>
+
         <p class="empty" v-if="tasks.length === 0">还没有任务，先添加一条吧～</p>
+        <p class="empty" v-else-if="filteredTasks.length === 0">当前筛选下没有任务</p>
 
         <ul class="list">
             <TaskItem
-                v-for="task in tasks"
+                v-for="task in filteredTasks"
                 :key="task.id"
                 :task="task"
                 @remove="removeTask"
@@ -223,6 +238,27 @@ onMounted(checkLogin)
 .empty {
     color: #999;
     margin: 12px 0;
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.filters button {
+    padding: 6px 16px;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    color: #555;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.filters button.active {
+    background-color: #4caf50;
+    color: white;
 }
 
 .list {
