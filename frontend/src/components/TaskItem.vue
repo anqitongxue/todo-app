@@ -13,7 +13,10 @@ function handleRemove() {
 
 <template>
     <li>
-        <span>{{ task.name }}</span>
+        <div class="info">
+            <span>{{ task.name }}</span>
+            <span class="cat" v-if="task.category">{{ task.category }}</span>
+        </div>
         <button class="del" @click="handleRemove">删除</button>
     </li>
 </template>
@@ -38,5 +41,19 @@ li {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cat {
+    font-size: 12px;
+    color: #4caf50;
+    background-color: #e8f5e9;
+    padding: 2px 8px;
+    border-radius: 10px;
 }
 </style>

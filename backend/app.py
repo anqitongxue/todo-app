@@ -36,7 +36,7 @@ def get_tasks():
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT id, name, done, created_at FROM tasks WHERE is_deleted = 0 AND user_id = %s ORDER BY id",
+        "SELECT id, name, done, created_at, category FROM tasks WHERE is_deleted = 0 AND user_id = %s ORDER BY id",
         (user_id,),
     )
     rows = cursor.fetchall()
@@ -47,6 +47,7 @@ def get_tasks():
             "name": row[1],
             "done": bool(row[2]),
             "created_at": str(row[3]),
+            "category": row[4],
         })
     cursor.close()
     conn.close()
@@ -62,20 +63,21 @@ def add_task():
 
     data = request.get_json()
     name = data.get('name')
+    category = data.get('category', '')   # 没传分类就默认空字符串
     if not name:
         return jsonify({"error": "任务名不能为空"}), 400
 
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO tasks (name, done, user_id) VALUES (%s, FALSE, %s)",
-        (name, user_id),
+        "INSERT INTO tasks (name, done, user_id, category) VALUES (%s, FALSE, %s, %s)",
+        (name, user_id, category),
     )
     conn.commit()
     new_id = cursor.lastrowid
     cursor.close()
     conn.close()
-    return jsonify({"id": new_id, "name": name, "done": False}), 201
+    return jsonify({"id": new_id, "name": name, "done": False, "category": category}), 201
 
 
 # 删：DELETE /tasks/<id> —— 只能删自己的（WHERE 里加了 user_id）

@@ -12,6 +12,7 @@ const currentUser = ref('')
 
 // 任务相关状态
 const newTask = ref('')
+const newCategory = ref('')
 const tasks = ref([])
 
 // 页面加载时：检查是否已登录
@@ -78,9 +79,10 @@ async function addTask() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, category: newCategory.value }),
     })
     newTask.value = ''
+    newCategory.value = ''
     loadTasks()
 }
 
@@ -115,6 +117,7 @@ onMounted(checkLogin)
 
         <div class="add-row">
             <input class="input" v-model="newTask" placeholder="输入一个新任务...">
+            <input class="input category" v-model="newCategory" placeholder="分类（如：工作）">
             <button class="btn" @click="addTask">添加</button>
         </div>
 
@@ -162,6 +165,11 @@ onMounted(checkLogin)
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+.category {
+    flex: 0 0 140px;
+    max-width: 140px;
 }
 
 .btn {
