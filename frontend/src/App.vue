@@ -92,6 +92,19 @@ async function removeTask(id) {
     loadTasks()
 }
 
+// 切换完成状态
+async function toggleTask(id, done) {
+    const task = tasks.value.find(t => t.id === id)
+    if (!task) return
+    await fetch(`${API}/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name: task.name, done }),   // name 要原样带上，否则会被清空
+    })
+    loadTasks()
+}
+
 onMounted(checkLogin)
 </script>
 
@@ -129,6 +142,7 @@ onMounted(checkLogin)
                 :key="task.id"
                 :task="task"
                 @remove="removeTask"
+                @toggle="toggleTask"
             />
         </ul>
     </div>

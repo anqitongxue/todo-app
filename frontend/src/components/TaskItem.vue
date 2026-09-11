@@ -1,20 +1,25 @@
 <script setup>
-// 现在 task 是一个对象：{ id, name, done, created_at }
+// task 是一个对象：{ id, name, done, created_at, category }
 const props = defineProps({
     task: Object
 })
 
-const emit = defineEmits(['remove'])
+const emit = defineEmits(['remove', 'toggle'])
 
 function handleRemove() {
-    emit('remove', props.task.id)   // 把任务的 id 发给父组件（不再用 index）
+    emit('remove', props.task.id)   // 把任务的 id 发给父组件
+}
+
+function handleToggle() {
+    emit('toggle', props.task.id, !props.task.done)   // 把"新的完成状态"发给父组件
 }
 </script>
 
 <template>
-    <li>
+    <li :class="{ done: task.done }">
         <div class="info">
-            <span>{{ task.name }}</span>
+            <input type="checkbox" :checked="task.done" @change="handleToggle">
+            <span class="name">{{ task.name }}</span>
             <span class="cat" v-if="task.category">{{ task.category }}</span>
         </div>
         <button class="del" @click="handleRemove">删除</button>
@@ -55,5 +60,21 @@ li {
     background-color: #e8f5e9;
     padding: 2px 8px;
     border-radius: 10px;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+li.done .name {
+    color: #999;
+    text-decoration: line-through;
+}
+
+li.done {
+    opacity: 0.75;
 }
 </style>

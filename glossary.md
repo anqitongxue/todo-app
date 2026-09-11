@@ -36,6 +36,8 @@
 - **props**：父组件传给子组件的数据。父组件写 `:属性="值"`，子组件用 `defineProps` 接收。
 - **emit**：子组件向父组件"发事件"的机制。用 `defineEmits` 声明、`emit('事件名', 参数)` 触发，父组件用 `@事件名` 监听。
 - **单向数据流**：数据只能从父流向子（props）；子要改数据，必须用 emit 上报，由父来改。
+- **动态 class（:class）**：用 `:class="{ 类名: 条件 }"` 根据条件动态加/去某个 class，条件为真才加上（如 `:class="{ done: task.done }"`）。
+- **:checked / @change**：勾选框（checkbox）的写法。因为它的值常来自父组件的 props（子组件不能直接改），所以用 `:checked="值"` 只读显示、用 `@change` 上报变化，而不是 `v-model`。
 - **作用域样式（scoped）**：`<style scoped>` 让样式只作用于当前组件、不泄露到别的组件；全局样式（如 body）放 `style.css`。
 - **fetch**：浏览器内置的"发 HTTP 请求"函数，`fetch(url)` 发 GET，`fetch(url, {method, headers, body})` 发其他方法。
 - **async / await**：处理"异步"（要等待的操作）的语法；`await` 等一个异步操作完成，函数需标 `async`。
