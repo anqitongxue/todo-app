@@ -150,11 +150,15 @@ onMounted(checkLogin)
                 <button class="logout" @click="logout">退出</button>
             </p>
 
-            <div class="add-row">
-                <input class="input" v-model="newTask" placeholder="输入一个新任务...">
-                <input class="input category" v-model="newCategory" placeholder="分类（如：工作）">
-                <input class="input date" type="date" v-model="newDueDate">
-                <button class="btn" @click="addTask">添加</button>
+            <div class="add-area">
+                <div class="add-row">
+                    <input class="input" v-model="newTask" placeholder="输入一个新任务...">
+                    <button class="btn" @click="addTask">添加</button>
+                </div>
+                <div class="add-meta">
+                    <input class="input" v-model="newCategory" placeholder="分类（如：工作）">
+                    <input class="input" type="date" v-model="newDueDate">
+                </div>
             </div>
 
             <div class="filters">
@@ -214,10 +218,23 @@ onMounted(checkLogin)
     flex: 1;
 }
 
+.add-area {
+    margin-bottom: 16px;
+}
+
 .add-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+}
+
+.add-meta {
+    display: flex;
+    gap: 8px;
+}
+
+.add-meta .input {
+    flex: 1;
 }
 
 .input {
@@ -233,16 +250,6 @@ onMounted(checkLogin)
     outline: none;
     border-color: #4caf50;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
-}
-
-.category {
-    flex: 0 0 130px;
-    max-width: 130px;
-}
-
-.date {
-    flex: 0 0 150px;
-    max-width: 150px;
 }
 
 .btn {
